@@ -1,0 +1,42 @@
+# Środowisko i konfiguracja
+.env
+.env.local
+.env.*.local
+
+# Wirtualne środowiska Python
+.venv/
+venv/
+ENV/
+env/
+
+# Pamięć podręczna Pythona
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Pliki tymczasowe generowane przez aplikację SOC AI
+temp_upload.pcap
+*.pcap
+network_graph.html
+*.pdf
+raport_*.pdf
+
+# Edytory i IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker / bazy danych lokalne zrzuty
+*.dump
+*.sql
+postgres_data/
+
+# Logi
+*.log
+
+# Notatki i pliki robocze
+PROJECT_CONTEXT.md
+
+

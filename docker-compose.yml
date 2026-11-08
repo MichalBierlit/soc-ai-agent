@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin_password
+      POSTGRES_DB: soc_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d soc_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:admin_password@db:5432/soc_db
+    env_file:
+      - .env  # Bezpiecznie zaczytuje klucze API
+    depends_on:
+      db:
+        condition: service_healthy
+
+  dashboard:
+    build: .
+    ports:
+      - "8501:8501"  # Domyślny port Streamlita
+    command: streamlit run dashboard.py --server.address=0.0.0.0
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:admin_password@db:5432/soc_db
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgres_data:
